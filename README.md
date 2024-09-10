@@ -35,7 +35,13 @@ The easiest way to deploy your Next.js app is to use the [Vercel Platform](https
 
 Check out our [Next.js deployment documentation](https://nextjs.org/docs/deployment) for more details.
 
+## IMPORTANT !!!!!!!!
+
 ## Run convex to run API
 
 bunx convex dev
 More details: https://docs.convex.dev/quickstart/nextjs
+
+## add config to environment
+
+bunx convex env set PARAMETER=value
