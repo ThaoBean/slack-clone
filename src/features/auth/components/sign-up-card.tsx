@@ -28,6 +28,7 @@ export const SignUpCard: React.FC<SignUpCardProps> = ({ setState }) => {
   const [error, setError] = useState("");
 
   const [value, setValue] = useState({
+    name: "",
     email: "",
     password: "",
     confirmPassword: "",
@@ -87,6 +88,13 @@ export const SignUpCard: React.FC<SignUpCardProps> = ({ setState }) => {
 
       <CardContent className='space-y-5 px-0 pb-0'>
         <form onSubmit={handlePasswordSignUp} className='space-y-2.5'>
+          <Input
+            disabled={pending}
+            value={value.name}
+            onChange={(e) => handleChangeValue("name", e.target.value)}
+            placeholder='Full name'
+            required
+          />
           <Input
             disabled={pending}
             value={value.email}
