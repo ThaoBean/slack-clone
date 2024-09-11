@@ -23,6 +23,7 @@ interface SignInCardProps {
 export const SignInCard: React.FC<SignInCardProps> = ({ setState }) => {
   const { signIn } = useAuthActions();
 
+  const [pending, setPending] = useState(false);
   const [value, setValue] = useState({
     email: "",
     password: "",
@@ -36,7 +37,10 @@ export const SignInCard: React.FC<SignInCardProps> = ({ setState }) => {
   };
 
   const handleProviderSignIn = (type: "github" | "google") => {
-    signIn(type);
+    setPending(true);
+    signIn(type).finally(() => {
+      setPending(false);
+    });
   };
 
   return (
@@ -51,6 +55,7 @@ export const SignInCard: React.FC<SignInCardProps> = ({ setState }) => {
       <CardContent className='space-y-5 px-0 pb-0'>
         <form className='space-y-2.5'>
           <Input
+            disabled={pending}
             value={value.email}
             onChange={(e) => handleChangeValue("email", e.target.value)}
             type='email'
@@ -58,20 +63,22 @@ export const SignInCard: React.FC<SignInCardProps> = ({ setState }) => {
             required
           />
           <Input
+            disabled={pending}
             value={value.password}
             onChange={(e) => handleChangeValue("password", e.target.value)}
             type='password'
             placeholder='Password'
             required
           />
-          <Button type='submit' className='w-full' size='lg'>
+          <Button type='submit' className='w-full' size='lg' disabled={pending}>
             Continue
           </Button>
         </form>
         <Separator />
         <div className='flex flex-col gap-y-2.5'>
           <Button
-            onClick={() => {}}
+            disabled={pending}
+            onClick={() => handleProviderSignIn("google")}
             variant='outline'
             size='lg'
             className='w-full relative'
@@ -81,6 +88,7 @@ export const SignInCard: React.FC<SignInCardProps> = ({ setState }) => {
           </Button>
 
           <Button
+            disabled={pending}
             onClick={() => handleProviderSignIn("github")}
             variant='outline'
             size='lg'
@@ -94,7 +102,7 @@ export const SignInCard: React.FC<SignInCardProps> = ({ setState }) => {
           Already have an account?{" "}
           <span
             className='text-sky-700  hover:underline cursor-pointer'
-            onClick={() => setState("signUp")}
+            onClick={() => (pending ? null : setState("signUp"))}
           >
             Sign up
           </span>
