@@ -14,12 +14,19 @@ import React, { useState } from "react";
 import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { SignInFlow } from "../types";
+import { TriangleAlert } from "lucide-react";
+import { useAuthActions } from "@convex-dev/auth/react";
 
 interface SignUpCardProps {
   setState: (state: SignInFlow) => void;
 }
 
 export const SignUpCard: React.FC<SignUpCardProps> = ({ setState }) => {
+  const { signIn } = useAuthActions();
+
+  const [pending, setPending] = useState(false);
+  const [error, setError] = useState("");
+
   const [value, setValue] = useState({
     email: "",
     password: "",
@@ -33,6 +40,35 @@ export const SignUpCard: React.FC<SignUpCardProps> = ({ setState }) => {
     });
   };
 
+  const handlePasswordSignUp = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+    setPending(true);
+
+    if (value.password !== value.confirmPassword) {
+      setError("Password does not match!");
+      setPending(false);
+      return;
+    }
+
+    signIn("password", {
+      ...value,
+      flow: "signUp",
+    })
+      .catch(() => {
+        setError("Something went wrong!");
+      })
+      .finally(() => {
+        setPending(false);
+      });
+  };
+
+  const handleProviderSignUp = (type: "github" | "google") => {
+    setPending(true);
+    signIn(type).finally(() => {
+      setPending(false);
+    });
+  };
+
   return (
     <Card className='w-full h-full p-8'>
       <CardHeader className='px-0 pt-0'>
@@ -42,9 +78,17 @@ export const SignUpCard: React.FC<SignUpCardProps> = ({ setState }) => {
         </CardDescription>
       </CardHeader>
 
+      {!!error && (
+        <div className='bg-destructive/15 p-3 round-md flex items-center gap-x-2 text-sm text-destructive mb-6'>
+          <TriangleAlert className='size-4' />
+          <p>{error}</p>
+        </div>
+      )}
+
       <CardContent className='space-y-5 px-0 pb-0'>
-        <form className='space-y-2.5'>
+        <form onSubmit={handlePasswordSignUp} className='space-y-2.5'>
           <Input
+            disabled={pending}
             value={value.email}
             onChange={(e) => handleChangeValue("email", e.target.value)}
             type='email'
@@ -52,6 +96,7 @@ export const SignUpCard: React.FC<SignUpCardProps> = ({ setState }) => {
             required
           />
           <Input
+            disabled={pending}
             value={value.password}
             onChange={(e) => handleChangeValue("password", e.target.value)}
             type='password'
@@ -59,6 +104,7 @@ export const SignUpCard: React.FC<SignUpCardProps> = ({ setState }) => {
             required
           />
           <Input
+            disabled={pending}
             value={value.confirmPassword}
             onChange={(e) =>
               handleChangeValue("confirmPassword", e.target.value)
@@ -67,14 +113,15 @@ export const SignUpCard: React.FC<SignUpCardProps> = ({ setState }) => {
             placeholder='Confirm password'
             required
           />
-          <Button type='submit' className='w-full' size='lg'>
+          <Button disabled={pending} type='submit' className='w-full' size='lg'>
             Continue
           </Button>
         </form>
         <Separator />
         <div className='flex flex-col gap-y-2.5'>
           <Button
-            onClick={() => {}}
+            disabled={pending}
+            onClick={() => handleProviderSignUp("google")}
             variant='outline'
             size='lg'
             className='w-full relative'
@@ -84,7 +131,8 @@ export const SignUpCard: React.FC<SignUpCardProps> = ({ setState }) => {
           </Button>
 
           <Button
-            onClick={() => {}}
+            disabled={pending}
+            onClick={() => handleProviderSignUp("github")}
             variant='outline'
             size='lg'
             className='w-full relative'
