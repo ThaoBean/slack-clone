@@ -15,6 +15,7 @@ import { FaGithub } from "react-icons/fa";
 import { FcGoogle } from "react-icons/fc";
 import { useAuthActions } from "@convex-dev/auth/react";
 import { SignInFlow } from "../types";
+import { TriangleAlert } from "lucide-react";
 
 interface SignInCardProps {
   setState: (state: SignInFlow) => void;
@@ -24,6 +25,7 @@ export const SignInCard: React.FC<SignInCardProps> = ({ setState }) => {
   const { signIn } = useAuthActions();
 
   const [pending, setPending] = useState(false);
+  const [error, setError] = useState("");
   const [value, setValue] = useState({
     email: "",
     password: "",
@@ -34,6 +36,22 @@ export const SignInCard: React.FC<SignInCardProps> = ({ setState }) => {
       ...value,
       [name]: _value,
     });
+  };
+
+  const handlePasswordSignIn = (e: React.FormEvent<HTMLFormElement>) => {
+    e.preventDefault();
+
+    setPending(true);
+    signIn("password", {
+      ...value,
+      flow: "signIn",
+    })
+      .catch(() => {
+        setError("Invalid email or password!");
+      })
+      .finally(() => {
+        setPending(false);
+      });
   };
 
   const handleProviderSignIn = (type: "github" | "google") => {
@@ -52,8 +70,15 @@ export const SignInCard: React.FC<SignInCardProps> = ({ setState }) => {
         </CardDescription>
       </CardHeader>
 
+      {!!error && (
+        <div className='bg-destructive/15 p-3 round-md flex items-center gap-x-2 text-sm text-destructive mb-6'>
+          <TriangleAlert className='size-4' />
+          <p>{error}</p>
+        </div>
+      )}
+
       <CardContent className='space-y-5 px-0 pb-0'>
-        <form className='space-y-2.5'>
+        <form className='space-y-2.5' onSubmit={handlePasswordSignIn}>
           <Input
             disabled={pending}
             value={value.email}
