@@ -5,3 +5,4 @@ export * from "./separator";
 export * from "./dropdown-menu";
 export * from "./avatar";
 export * from "./dialog";
+export * from "./sonner";
