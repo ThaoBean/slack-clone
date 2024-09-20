@@ -37,7 +37,7 @@ export const CreateWorkspaceModal = () => {
         onSuccess(id) {
           // Redirect to workspaceId
           toast.success("Workspace was successfully created");
-          router.push(`workspace/${id}`);
+          router.push(`/workspace/${id}`);
           handleClose();
         },
         onError(err) {
