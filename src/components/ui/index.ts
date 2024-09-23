@@ -6,3 +6,5 @@ export * from "./dropdown-menu";
 export * from "./avatar";
 export * from "./dialog";
 export * from "./sonner";
+export * from "./resizable";
+export * from "./tooltip";
