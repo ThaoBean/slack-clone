@@ -3,10 +3,8 @@ import { api } from "../../../../convex/_generated/api";
 import { useCallback, useMemo, useState } from "react";
 import { Id } from "../../../../convex/_generated/dataModel";
 
-type RequestType = { name: string };
+type RequestType = { id: Id<"workspaces"> };
 type ResponseType = Id<"workspaces"> | null;
-
-// type ResponseType = Doc<"workspaces">; if want to get Object of a workspace
 
 type Options = {
   onSuccess?: (data: ResponseType) => void;
@@ -15,18 +13,14 @@ type Options = {
   throwError?: boolean;
 };
 
-export const useCreateWorkSpace = () => {
-  // const [data, setData] = useState<ResponseType>(null);
+export const useRemoveWorkspace = () => {
   const [status, setStatus] = useState<
     "success" | "error" | "settled" | "pending" | null
   >(null);
 
   const isPending = useMemo(() => status === "pending", [status]);
-  // const isSuccess = useMemo(() => status === "success", [status]);
-  // const isError = useMemo(() => status === "error", [status]);
-  // const isSettled = useMemo(() => status === "settled", [status]);
 
-  const mutation = useMutation(api.workspaces.create);
+  const mutation = useMutation(api.workspaces.remove);
 
   const mutate = useCallback(
     async (values: RequestType, options?: Options) => {
