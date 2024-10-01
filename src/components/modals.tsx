@@ -9,7 +9,6 @@ export const Modals = () => {
   useEffect(() => {
     setMounted(true);
   }, []);
-  console.log("mounted", mounted);
 
   if (!mounted) return null;
   return <CreateWorkspaceModal />;
