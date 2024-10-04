@@ -8,12 +8,12 @@ import {
 import { SidebarItem } from "./sidebar-item";
 import { WorkspaceHeader } from "./workspace-header";
 import { WorkspaceSection } from "./workspace-section";
+import { UserItem } from "./user-item";
 import { useChannelId, useWorkspaceId } from "@/hooks";
 import { useGetWorkspace } from "@/features/workspaces/hooks";
-import { useGetChannels, useGetMembers } from "@/features/channels/hooks";
-import { useCurrentMember } from "@/features/members/hooks/use-current-member";
-import { UserItem } from "./user-item";
+import { useGetChannels } from "@/features/channels/hooks";
 import { useCreateChannelModal } from "@/features/channels/store";
+import { useCurrentMember, useGetMembers } from "@/features/members/hooks";
 
 export const WorkspaceSidebar = () => {
   const workspaceId = useWorkspaceId();
