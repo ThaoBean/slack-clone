@@ -8,3 +8,4 @@ export * from "./dialog";
 export * from "./sonner";
 export * from "./resizable";
 export * from "./tooltip";
+export * from "./popover";
