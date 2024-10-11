@@ -17,6 +17,7 @@ import { Button } from "./ui";
 
 import "quill/dist/quill.snow.css";
 import { cn } from "@/lib/utils";
+import { EmojiPopover } from "./emoji-popover";
 type EditorValue = {
   image: File | null;
   body: string;
@@ -133,6 +134,11 @@ const Editor = ({
     }
   };
 
+  const onEmojiSelect = (emoji: any) => {
+    const quill = quillRef.current;
+    quill?.insertText(quill?.getSelection()?.index || 0, emoji.native);
+  };
+
   const isEmpty = text.replace(/<(.|\n)*?>/g, "").trim().length === 0;
 
   return (
@@ -152,16 +158,11 @@ const Editor = ({
               <PiTextAa className='size-4' />
             </Button>
           </Hint>
-          <Hint label='Emoji'>
-            <Button
-              disabled={disabled}
-              size='iconSm'
-              variant='ghost'
-              onClick={() => {}}
-            >
+          <EmojiPopover onEmojiSelect={onEmojiSelect}>
+            <Button disabled={disabled} size='iconSm' variant='ghost'>
               <Smile className='size-4' />
             </Button>
-          </Hint>
+          </EmojiPopover>
 
           {variant === "create" && (
             <Hint label='Image'>
@@ -196,6 +197,7 @@ const Editor = ({
               </Button>
             </div>
           )}
+
           {variant === "create" && (
             <Button
               disabled={disabled || isEmpty}
@@ -213,11 +215,18 @@ const Editor = ({
           )}
         </div>
       </div>
-      <div className='p-2 text-[10px] text-muted-foreground flex justify-end'>
-        <p>
-          <strong>Shift + Return </strong> to add a new line
-        </p>
-      </div>
+      {variant === "create" && (
+        <div
+          className={cn(
+            "p-2 text-[10px] text-muted-foreground flex justify-end opacity-0 transition",
+            !isEmpty && "opacity-100",
+          )}
+        >
+          <p>
+            <strong>Shift + Return </strong> to add a new line
+          </p>
+        </div>
+      )}
     </div>
   );
 };
