@@ -3,3 +3,4 @@ export * from "./convex-client-provider";
 export * from "./jotai-provider";
 export * from "./modals";
 export * from "./emoji-popover";
+export * from "./message-list";
