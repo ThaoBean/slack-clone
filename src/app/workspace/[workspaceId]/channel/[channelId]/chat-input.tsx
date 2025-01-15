@@ -61,7 +61,7 @@ export const ChatInput = ({ placeholder }: ChatInputProps) => {
         const result = await fetch(url, {
           method: "POST",
           headers: { "Content-Type": image.type },
-          body,
+          body: image,
         });
 
         if (!result.ok) throw new Error("Failed to upload image");
