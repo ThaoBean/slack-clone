@@ -34,7 +34,9 @@ export const MessageList = ({
   isLoadingMore,
   canLoadMore,
 }: MessageListProps) => {
-  const [editingId, setEditingId] = useState<Id<"messages"> | null>(null);
+  const [editingId, setEditingId] = useState<Id<"messages"> | undefined>(
+    undefined,
+  );
   const workspaceId = useWorkspaceId();
   const { data: currentMember } = useCurrentMember({ workspaceId });
 

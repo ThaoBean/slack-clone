@@ -7,6 +7,7 @@ import dynamic from "next/dynamic";
 import { Hint } from "./hint";
 import { Avatar, AvatarFallback, AvatarImage } from "./ui";
 import { Thumbnail } from "./thumbnail";
+import { Toolbar } from "./toolbar";
 
 const Renderer = dynamic(() => import("@/components/renderer"), { ssr: false });
 
@@ -28,7 +29,7 @@ interface MessageProps {
   updatedAt: Doc<"messages">["updateAt"];
   isEditing: boolean;
   isCompact?: boolean;
-  setEditingId: (id: Id<"messages"> | null) => void;
+  setEditingId: (id: Id<"messages"> | undefined) => void;
   hideThreadButton?: boolean;
   threadCount?: number;
   threadImage?: string;
@@ -54,8 +55,6 @@ export const Message = ({
   threadImage,
   threadTimestamp,
 }: MessageProps) => {
-  console.log("image", image);
-
   if (isCompact) {
     return (
       <div className='flex flex-col gap-2 p-1.5 px-5 hover:bg-gray-100/60 group relative'>
@@ -110,6 +109,17 @@ export const Message = ({
           ) : null}
         </div>
       </div>
+      {!isEditing && (
+        <Toolbar
+          isAuthor={isAuthor}
+          isPending={false}
+          handleEdit={() => setEditingId(id)}
+          handleThread={() => {}}
+          handleDelete={() => {}}
+          handleReaction={() => {}}
+          hideThreadButton={hideThreadButton || false}
+        />
+      )}
     </div>
   );
 };
